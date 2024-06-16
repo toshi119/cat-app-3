@@ -24,6 +24,11 @@ const Home: NextPage = () => {
     return result[0];
   };
 
+  const handleClick = async () => {
+    const catImage = await fetchCatImage();
+    console.log(catImage);
+  };
+
   return (
     <div 
       style={{
@@ -41,7 +46,7 @@ const Home: NextPage = () => {
         height="auto"
       />
 
-      <button style={{ marginTop: "18" }} onClick={fetchCatImage}>
+      <button style={{ marginTop: "18" }} onClick={handleClick}>
         きゃー！発見
       </button>
     </div>

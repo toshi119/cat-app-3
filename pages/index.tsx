@@ -1,4 +1,4 @@
-import type { NextPage } from "next"
+import type { GetServerSideProps, NextPage } from "next"
 import Head from "next/head";
 import Image from "next/image";
 import { Inter } from "next/font/google";
@@ -14,18 +14,22 @@ interface SearchCatImage {
   height: number;
 }
 
-const Home: NextPage = () => {
+interface IndexPageProps {
+  initialCatImageURL: string;
+}
 
-  const [catImageURL, setCatImageURL] = useState("");
+// The Cat APIを取得する関数
+// 型を指定してあげることで間違ったものを取得したときにエラーがでるようになる
+const fetchCatImage = async (): Promise<SearchCatImage> => {
+  const res = await fetch("https://api.thecatapi.com/v1/images/search");
+  const result = await res.json();
+  // console.log(result[0]);
+  return result[0];
+};
 
-  // The Cat APIを取得する関数
-  // 型を指定してあげることで間違ったものを取得したときにエラーがでるようになる
-  const fetchCatImage = async (): Promise<SearchCatImage> => {
-    const res = await fetch("https://api.thecatapi.com/v1/images/search");
-    const result = await res.json();
-    // console.log(result[0]);
-    return result[0];
-  };
+const Home: NextPage<IndexPageProps> = ({ initialCatImageURL }) => {
+
+  const [catImageURL, setCatImageURL] = useState(initialCatImageURL);
 
   const handleClick = async () => {
     const catImage = await fetchCatImage();
@@ -51,6 +55,17 @@ const Home: NextPage = () => {
       </button>
     </div>
   );
+};
+
+// SSR(サーバーサイドレンダリング)の実装
+export const getServerSideProps: GetServerSideProps<IndexPageProps> = async () => {
+  const catImage = await fetchCatImage();
+
+  return {
+    props: {
+      initialCatImageURL: catImage.url,
+    },
+  };
 };
 
 export default Home;

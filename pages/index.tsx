@@ -15,6 +15,15 @@ const inter = Inter({ subsets: ["latin"] });
 // }
 
 const Home: NextPage = () => {
+
+  // The Cat APIを取得する関数
+  const fetchCatImage = async () => {
+    const res = await fetch("https://api.thecatapi.com/v1/images/search");
+    const result = await res.json();
+    // console.log(result[0]);
+    return result[0];
+  };
+
   return (
     <div 
       style={{
@@ -32,7 +41,7 @@ const Home: NextPage = () => {
         height="auto"
       />
 
-      <button style={{ marginTop: "18" }}>
+      <button style={{ marginTop: "18" }} onClick={fetchCatImage}>
         きゃー！発見
       </button>
     </div>

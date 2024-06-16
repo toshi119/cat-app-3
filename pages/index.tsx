@@ -3,6 +3,7 @@ import Head from "next/head";
 import Image from "next/image";
 import { Inter } from "next/font/google";
 import styles from "@/styles/Home.module.css";
+import { useState } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,6 +16,8 @@ interface SearchCatImage {
 
 const Home: NextPage = () => {
 
+  const [catImageURL, setCatImageURL] = useState("");
+
   // The Cat APIを取得する関数
   // 型を指定してあげることで間違ったものを取得したときにエラーがでるようになる
   const fetchCatImage = async (): Promise<SearchCatImage> => {
@@ -26,7 +29,8 @@ const Home: NextPage = () => {
 
   const handleClick = async () => {
     const catImage = await fetchCatImage();
-    console.log(catImage.url);
+    // console.log(catImage.url);
+    setCatImageURL(catImage.url);
   };
 
   return (
@@ -40,13 +44,9 @@ const Home: NextPage = () => {
       }}
     >
       <h1>今日の子猫ちゃん🐈</h1>
-      <img 
-        src="https://cdn2.thecatapi.com/images/39m.jpg"
-        width={500}
-        height="auto"
-      />
+      <img src={catImageURL} width={500} height="auto"/>
 
-      <button style={{ marginTop: "18" }} onClick={handleClick}>
+      <button style={{ marginTop: 18 }} onClick={handleClick}>
         きゃー！発見
       </button>
     </div>
